@@ -1,103 +1,96 @@
-AI LLM Agent Fore Wazuh
-Wazuh AI Reporter est un agent intelligent conçu pour automatiser l'analyse des alertes de sécurité de votre serveur Wazuh. Au lieu de parcourir des milliers de lignes de logs JSON, cet outil extrait les alertes pertinentes, les fait analyser par une IA locale (Ollama) et vous envoie un rapport de synthèse structuré par e-mail.
+# 🛡️ Wazuh AI Reporter
+### *L'intelligence artificielle au service de votre SOC*
 
-🚀 Fonctionnement en 4 étapes
-Extraction SSH : Le script se connecte à votre manager Wazuh pour récupérer les alertes.
+[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/)
+[![Wazuh](https://img.shields.io/badge/Wazuh-4.x-orange)](https://wazuh.com/)
+[![Ollama](https://img.shields.io/badge/Ollama-Llama3-white)](https://ollama.com/)
 
-Tri Intelligent : Il filtre les données (Niveau 5+ sur les dernières 24h), regroupe les alertes par regles filtré par régles, agents affectés par cet régles, et nombre d'occurences par agent.
+**Wazuh AI Reporter** est un agent intelligent conçu pour automatiser l'analyse des alertes de sécurité. Au lieu de parcourir manuellement des milliers de lignes de logs JSON, cet outil extrait les données critiques, les fait analyser par une IA locale (**Ollama**) et vous envoie une synthèse actionnable directement par e-mail.
 
-Analyse IA (Llama 3) : L'IA interprète les menaces, identifie les machines cibles et propose des solutions.
+---
 
-Notification : Un rapport HTML élégant est envoyé par e-mail.
+## 🚀 Fonctionnement en 4 étapes
 
-📊 Exemple de Rapport Généré
-Voici à quoi ressemble le rapport que vous recevrez quotidiennement dans votre boîte mail :
+| Étape | Action | Description |
+| :--- | :--- | :--- |
+| **1** | **Extraction SSH** | Connexion sécurisée au manager Wazuh pour récupérer les logs bruts. |
+| **2** | **Tri Intelligent** | Filtrage (Niveau 5+ / 24h) et agrégation par règle et par agent. |
+| **3** | **Analyse IA** | Le modèle **Llama 3** interprète les menaces et identifie les patterns d'attaque. |
+| **4** | **Notification** | Génération et envoi d'un rapport HTML élégant aux administrateurs. |
 
-🛡️ Synthèse de Sécurité IA Wazuh
-Généré le : 06/04/2026 à 16:05:52
+---
 
-1. Résumé des Menaces Critiques
-Les alertes de sécurité Wazuh agrégées indiquent les menaces suivantes :
+## 📊 Exemple de Rapport Généré
 
-🔴 Windows audit failure event (Règle 60104) : 50 027 occurrences.
+Le rapport reçu quotidiennement transforme des données complexes en informations claires :
 
-🖥️ Hôtes les plus touchés : SRV-AD-01 (46 502), SRV-SQL-PROD (1 396), DC-MASTER (1 030), WS-RH-05 (123).
+> ### 🛡️ Synthèse de Sécurité IA Wazuh
+> **Date :** 06/04/2026 à 16:05:52
+>
+> #### **1. Résumé des Menaces Critiques**
+> * 🔴 **Windows audit failure (Règle 60104) :** *50 027 occurrences.*
+>   - 🖥️ **Hôtes :** `SRV-AD-01` (46 502), `SRV-SQL-PROD` (1 396), `DC-MASTER` (1 030).
+>   - ⚠️ **Analyse :** Attaque ciblée sur les contrôleurs de domaine (Brute force suspecté).
+>
+> * 🔴 **Windows application error (Règle 60602) :** *1 269 occurrences.*
+>   - 🖥️ **Hôtes :** `WS-DEV-12` (831), `WS-DEV-14` (415).
+>   - ⚠️ **Analyse :** Potentielle tentative d'exploitation de vulnérabilité applicative sur le segment dev.
+>
+> #### **2. Impact Potentiel Global**
+> Le volume massif de tentatives d'accès non autorisées représente un risque critique pour la confidentialité des comptes à hauts privilèges.
+>
+> #### **3. Mesures Correctives Suggérées**
+> * 🔒 **Isolation :** Quarantaine immédiate des IP sources.
+> * 🛡️ **Hardening :** Renforcement des politiques de verrouillage de compte.
+> * 🛠️ **Patching :** Mise à jour urgente des correctifs Windows.
 
-⚠️ Analyse : L'attaque semble ciblée sur les contrôleurs de domaine, avec une fréquence extrêmement élevée de tentatives d'accès non autorisées (Brute force suspecté).
+---
 
-🔴 Windows application error event (Règle 60602) : 1 269 occurrences.
+## 🛠️ Prérequis
 
-🖥️ Hôtes les plus touchés : WS-DEV-12 (831), WS-DEV-14 (415).
+* **Environnement** : Python 3.8+
+* **Wazuh** : Accès SSH au Manager (Authentification par clé RSA).
+* **IA** : [Ollama](https://ollama.com/) installé localement avec le modèle `llama3`.
+* **Mail** : Accès SMTP (Outlook, Gmail, ou relais interne).
 
-⚠️ Analyse : Ces erreurs répétées sur le segment développement pourraient indiquer une tentative d'exploitation de vulnérabilité applicative.
+---
 
-🔴 Windows System error event (Règle 61102) : 114 occurrences.
+## ⚙️ Configuration
 
-🖥️ Hôtes les plus touchés : SRV-FILE-01 (63), SRV-BACKUP (65).
+Modifiez la section `CONFIGURATION PARAMETERS` directement dans le script `main.py` :
 
-⚠️ Analyse : Les erreurs système sur les serveurs de stockage suggèrent une instabilité ou une modification non autorisée des services critiques.
+### 🔑 Accès Serveur & Wazuh
+* `SSH_HOST` : Adresse IP de votre manager Wazuh.
+* `SSH_KEY_PATH` : Chemin vers votre clé privée (ex: `~/.ssh/id_rsa`).
+* `ALERT_LEVEL_THRESHOLD` : Niveau de gravité minimum (défaut: `5`).
 
-2. Impact Potentiel Global
-Le volume massif de tentatives d'accès non autorisées (Audit Failure) représente un risque critique pour la confidentialité des comptes à hauts privilèges. Les erreurs système concomitantes sur les serveurs de fichiers pourraient affecter la disponibilité des données et l'intégrité du système de fichiers.
+### 🤖 Intelligence Artificielle
+* `OLLAMA_API_URL` : URL de votre instance (défaut: `http://localhost:11434/api/generate`).
+* `OLLAMA_MODEL` : Modèle utilisé (ex: `llama3`, `mistral`).
 
-3. Mesures Correctives Suggérées
-Isolation Immédiate : Mettre en quarantaine les IP sources générant les échecs d'audit.
+### 📧 Notification
+* `SMTP_HOST` / `PORT` : Paramètres de votre serveur mail.
+* `EMAIL_TO` : Destinataire du rapport.
 
-Hardening : Renforcer les politiques de verrouillage de compte Windows.
+---
 
-Patching : Appliquer les derniers correctifs de sécurité Windows sur les serveurs affectés.
+## 🖥️ Utilisation
 
-Audit : Vérifier l'état des services SessionEnv sur SRV-FILE-01.
-
-🛠️ Prérequis
-Python 3.8+
-
-Wazuh Manager avec accès SSH (Clé RSA).
-
-Ollama installé localement avec le modèle llama3.
-
-Accès SMTP (Outlook, Gmail ou Relais interne).
-
-⚙️ Configuration
-Ouvrez le script et modifiez la section CONFIGURATION PARAMETERS :
-
-🔑 Accès Serveur & Wazuh
-SSH_HOST : IP de votre serveur Wazuh.
-
-SSH_KEY_PATH : Chemin vers votre clé privée (~/.ssh/id_rsa).
-
-ALERT_LEVEL_THRESHOLD : Niveau minimum des alertes à traiter (défaut: 5).
-
-🤖 Intelligence Artificielle
-OLLAMA_API_URL : Par défaut http://localhost:11434/api/generate.
-
-OLLAMA_MODEL : Modèle utilisé (ex: llama3 ou mistral).
-
-📧 Envoi de rapports
-SMTP_HOST / PORT : Vos paramètres serveur mail.
-
-EMAIL_TO : L'adresse qui recevra les analyses.
-
-🖥️ Utilisation
-Pour lancer l'analyse manuellement :
-
-Bash
+**Exécution manuelle :**
+```bash
 python main.py
-Astuce : Pour recevoir un rapport chaque matin, ajoutez une tâche Cron :
+```
 
-Bash
-# Exemple : Lancer le script tous les jours à 08h00
+**Automatisation (Cron) :**
+Pour recevoir votre rapport tous les matins à 08h00, ajoutez cette ligne à votre crontab (`crontab -e`) :
+
+```bash
 00 08 * * * /usr/bin/python3 /chemin/vers/votre/script/main.py
-📝 Structure du Rapport Généré
-Le rapport reçu par mail contient trois sections clés :
+```
 
-Résumé des Menaces Critiques : Liste des alertes avec emojis de priorité (🔴, 🟠, 🟡 et 🟢).
+⚠️ Notes de Sécurité & Performance
+Sécurité SSH : Privilégiez une clé SSH dédiée sans passphrase ou utilisez un agent SSH. L'utilisateur doit avoir les droits de lecture sur /var/ossec/logs/alerts/alerts.json.
 
-Impact Potentiel Global : Analyse des risques pour votre infrastructure.
+Performance IA : Par défaut, le script limite l'usage à 2 threads (num_thread: 2) pour ne pas impacter les performances de la machine de monitoring pendant l'inférence.
 
-Mesures Correctives : Actions immédiates à entreprendre.
-
-⚠️ Notes de Sécurité
-Clés SSH : Utilisez une clé SSH sans mot de passe ou un agent SSH pour l'automatisation. Assurez-vous que l'utilisateur SSH a les droits de lecture sur /var/ossec/logs/alerts/alerts.json.
-
-Ressources : L'analyse IA est limitée à 2 threads dans le code (num_thread: 2) pour éviter de saturer le processeur de votre machine de monitoring.
+Confidentialité : L'analyse est 100% locale via Ollama. Aucune donnée de log n'est envoyée vers le cloud.
