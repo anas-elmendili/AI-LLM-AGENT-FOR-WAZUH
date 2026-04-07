@@ -88,9 +88,8 @@ Pour recevoir votre rapport tous les matins à 08h00, ajoutez cette ligne à vot
 00 08 * * * /usr/bin/python3 /chemin/vers/votre/script/main.py
 ```
 
-⚠️ Notes de Sécurité & Performance
-Sécurité SSH : Privilégiez une clé SSH dédiée sans passphrase ou utilisez un agent SSH. L'utilisateur doit avoir les droits de lecture sur /var/ossec/logs/alerts/alerts.json.
+## ⚠️ Notes de Sécurité & Performance
 
-Performance IA : Par défaut, le script limite l'usage à 2 threads (num_thread: 2) pour ne pas impacter les performances de la machine de monitoring pendant l'inférence.
-
-Confidentialité : L'analyse est 100% locale via Ollama. Aucune donnée de log n'est envoyée vers le cloud.
+* **Sécurité SSH :** Privilégiez une clé SSH dédiée sans passphrase ou utilisez un agent SSH. L'utilisateur doit avoir les droits de lecture sur `/var/ossec/logs/alerts/alerts.json`.
+* **Performance IA :** Par défaut, le script limite l'usage à 2 threads (`num_thread: 2`) pour ne pas impacter les performances de la machine de monitoring pendant l'inférence.
+* **Confidentialité :** L'analyse est 100% locale via Ollama. Aucune donnée de log n'est envoyée vers le cloud.
